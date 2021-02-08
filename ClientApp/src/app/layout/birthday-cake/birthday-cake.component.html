@@ -1,0 +1,278 @@
+<div class="col-10 cake-card">
+  <div class="container-fluid row d-flex justify-content-center col-12" style="margin-top: 8px;">
+      <div class="d-flex justify-content-start" style="width: 90%; margin-top: 16px;">
+        <h4>Stwórz Tort!</h4> 
+      </div>
+      <div class="d-flex justify-content-start" style="width: 90%; margin-top: 8px;">
+        <h5>Cena: {{ totalPrice }} zł/kg</h5>    
+      </div>
+      <div class="d-flex justify-content-start" style="width: 90%; margin-top: 8px;">
+        <mat-form-field appearance="legacy" style="width: 250px;">
+          <mat-label>Ile kg?</mat-label>
+          <input matInput type="number" placeholder="2.5">
+          <mat-hint>Zaleca się 1kg tortu na 10 osób. Tort o wadze 2-2,5 kg ma średnicę 18cm.</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="container-fluid row d-flex justify-content-center col-12">
+      <mat-horizontal-stepper style="background: none; width: 90%; margin-top: 8px;">
+        <mat-step>
+          <ng-template matStepLabel>{{ selectionCakes.selected[0] ? selectionCakes.selected[0].name : 'Biszkopt' }}</ng-template>
+          <div class="container-fluid row col-12 d-flex justify-content-center">
+            <mat-form-field class="col-10">
+              <mat-label>Filtruj</mat-label>
+              <input matInput (keyup)="applyFilter($event, dataSourceCakes)" placeholder="Szukaj...">
+            </mat-form-field>
+            <div class="table-responsive table-striped col-10 d-flex justify-content-center">
+              <table #tableCakes mat-table [dataSource]="dataSourceCakes" matSort #sorterCakes="matSort">
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td class="cake-row" mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                                  (change)="changed($event, selectionCakes, row)"
+                                  [checked]="selectionCakes.isSelected(row)" color="primary">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </th>
+                  <td class="cake-row" mat-cell *matCellDef="let row"> {{row.name}} </td>
+                </ng-container>
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Typ </th>
+                  <td class="cake-row" mat-cell *matCellDef="let row"> {{row.type}} </td>
+                </ng-container>
+                <ng-container matColumnDef="flavour">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Smak </th>
+                  <td class="cake-row" mat-cell *matCellDef="let row"> {{row.flavour}} </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Opis </th>
+                  <td class="cake-row" mat-cell *matCellDef="let row"> {{row.description}} </td>
+                </ng-container>
+                <ng-container matColumnDef="price">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Cena </th>
+                  <td class="cake-row" mat-cell *matCellDef="let row"> {{row.price}} zł/kg</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsCakes"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsCakes;"></tr>
+              </table>
+            </div>
+            <mat-paginator class="col-10" #paginatorCakes [pageSizeOptions]="[5, 10, 25, 50]"></mat-paginator>
+          </div>
+          <div style="bottom: 150px; position:fixed">
+            <button mat-button matStepperNext><span class="material-icons">keyboard_arrow_right</span></button>
+          </div>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>{{ selectionCreams.selected[0] ? selectionCreams.selected[0].name : 'Krem' }}</ng-template>
+          <div class="container-fluid row col-12 d-flex justify-content-center">
+            <mat-form-field class="col-10">
+              <mat-label>Filtruj</mat-label>
+              <input matInput (keyup)="applyFilter($event, dataSourceCreams)" placeholder="Szukaj...">
+            </mat-form-field>
+            <div class="table-responsive table-striped col-10 d-flex justify-content-center">
+              <table #tableCreams mat-table [dataSource]="dataSourceCreams" matSort #sorterCreams="matSort">
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td class="cake-row" mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                                  (change)="changed($event, selectionCreams, row)"
+                                  [checked]="selectionCreams.isSelected(row)" color="primary">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </th>
+                  <td class="cake-row" mat-cell *matCellDef="let row"> {{row.name}} </td>
+                </ng-container>
+                <ng-container matColumnDef="type">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Typ </th>
+                  <td class="cake-row" mat-cell *matCellDef="let row"> {{row.type}} </td>
+                </ng-container>
+                <ng-container matColumnDef="flavour">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Smak </th>
+                  <td class="cake-row" mat-cell *matCellDef="let row"> {{row.flavour}} </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Opis </th>
+                  <td class="cake-row" mat-cell *matCellDef="let row"> {{row.description}} </td>
+                </ng-container>
+                <ng-container matColumnDef="price">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Cena </th>
+                  <td class="cake-row" mat-cell *matCellDef="let row"> {{row.price}} zł/kg</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsCreams"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsCreams;"></tr>
+              </table>
+            </div>
+            <mat-paginator class="col-10" #paginatorCreams [pageSizeOptions]="[5, 10, 25, 50]"></mat-paginator>
+          </div>
+          <div style="bottom: 150px; position:fixed">
+            <button mat-button matStepperPrevious><span class="material-icons">keyboard_arrow_left</span></button>
+            <button mat-button matStepperNext><span class="material-icons">keyboard_arrow_right</span></button>
+          </div>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>{{ selectionAdditionals.selected[0] ? selectionAdditionals.selected[0].additional.name+'...' : 'Dodatki' }}</ng-template>
+          <div class="container-fluid row col-12 d-flex justify-content-center">
+            <mat-form-field class="col-10">
+              <mat-label>Filtruj</mat-label>
+              <input matInput (keyup)="applyFilter($event, dataSourceAdditionals)" placeholder="Szukaj...">
+            </mat-form-field>
+            <div class="table-responsive table-striped col-10 d-flex justify-content-center">
+              <table #tableAdditionals mat-table [dataSource]="dataSourceAdditionals" matSort #sorterAdditionals="matSort">
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let row" style="padding: 0px 0px 0px 16px">
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                                  (change)="changed($event, selectionAdditionals, row)"
+                                  [checked]="selectionAdditionals.isSelected(row)" color="primary">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </th>
+                  <td mat-cell *matCellDef="let row" style="padding: 0"> {{row.additional.name}} </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Opis </th>
+                  <td mat-cell *matCellDef="let row" style="padding: 0"> {{row.additional.description}} </td>
+                </ng-container>
+                <ng-container matColumnDef="quantity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Ilość </th>
+                  <td mat-cell *matCellDef="let row" style="padding: 0"> 
+                    <mat-form-field class="col-3">
+                    <input matInput type="number" [min]="1" [(ngModel)]="row.quantity" (ngModelChange)="calculateTotalPrice()">
+                    </mat-form-field> 
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="price">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Cena </th>
+                  <td mat-cell *matCellDef="let row" style="padding: 0">{{row.additional.price*row.quantity}} zł</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsAdditionals"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsAdditionals;"></tr>
+              </table>
+            </div>
+            <mat-paginator class="col-10" #paginatorAdditionals [pageSizeOptions]="[5, 10, 25, 50]"></mat-paginator>
+          </div>
+          <div style="bottom: 150px; position:fixed">
+            <button mat-button matStepperPrevious><span class="material-icons">keyboard_arrow_left</span></button>
+            <button mat-button matStepperNext><span class="material-icons">keyboard_arrow_right</span></button>
+          </div>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>{{ selectionDecorations.selected[0] ? selectionDecorations.selected[0].decoration.name+'...' : 'Dekoracje' }}</ng-template>
+          <div class="container-fluid row col-12 d-flex justify-content-center">
+            <mat-form-field class="col-10">
+              <mat-label>Filtruj</mat-label>
+              <input matInput (keyup)="applyFilter($event, dataSourceDecorations)" placeholder="Szukaj...">
+            </mat-form-field>
+            <div class="table-responsive table-striped col-10 d-flex justify-content-center">
+              <table #tableDecorations mat-table [dataSource]="dataSourceDecorations" matSort #sorterDecorations="matSort">
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let row" style="padding: 0px 0px 0px 16px">
+                    <mat-checkbox (click)="$event.stopPropagation()"
+                                  (change)="changed($event, selectionDecorations, row)"
+                                  [checked]="selectionDecorations.isSelected(row)" color="primary">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </th>
+                  <td mat-cell *matCellDef="let row" style="padding: 0"> {{row.decoration.name}} </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Opis </th>
+                  <td mat-cell *matCellDef="let row" style="padding: 0"> {{row.decoration.description}} </td>
+                </ng-container>
+                <ng-container matColumnDef="quantity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Ilość </th>
+                  <td mat-cell *matCellDef="let row" style="padding: 0"> 
+                    <mat-form-field class="col-3">
+                      <input matInput type="number" [min]="1" [(ngModel)]="row.quantity" (ngModelChange)="calculateTotalPrice()">
+                      </mat-form-field>  
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="price">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Cena </th>
+                  <td mat-cell *matCellDef="let row"  style="padding: 0"> {{row.decoration.price*row.quantity}} zł</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumnsDecorations"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumnsDecorations;"></tr>
+              </table>
+            </div>
+            <mat-paginator class="col-10" #paginatorDecorations [pageSizeOptions]="[5, 10, 25, 50]"></mat-paginator>
+          </div>
+          <div style="bottom: 150px; position:fixed">
+            <button mat-button matStepperPrevious><span class="material-icons">keyboard_arrow_left</span></button>
+            <button mat-button matStepperNext (click)="generateOrder()"><span class="material-icons">keyboard_arrow_right</span></button>
+          </div>
+        </mat-step>
+        <mat-step label="Wygeneruj zamówienie!">
+          <div class="container-fluid row col-12 d-flex justify-content-center">
+            <div class="col-10 d-flex justify-content-between">
+              <div class="col-6 d-flex justify-content-start" *ngIf="selectionCakes.selected[0]">
+                <ul style="list-style: none;">
+                  <li style="margin-left: -15px">
+                    <p style="font-weight: light; font-size: 1.25em;">Biszkopt:</p>
+                  </li>
+                  <li *ngFor="let selC of selectionCakes.selected;">
+                    <h5><strong>{{ selC.name }}</strong></h5>
+                  </li>
+                </ul>       
+              </div>
+              <div class="col-6 d-flex justify-content-start" *ngIf="selectionCreams.selected[0]">
+                <ul style="list-style: none;">
+                  <li style="margin-left: -15px">
+                    <p style="font-weight: light; font-size: 1.25em;">Krem:</p>
+                  </li>               
+                  <li *ngFor="let selCr of selectionCreams.selected;">
+                    <h5><strong>{{ selCr.name }}</strong></h5>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-10 d-flex justify-content-between">
+              <div class="col-6 d-flex justify-content-start" *ngIf="selectionAdditionals.selected.length != 0">
+                <ul style="list-style: none;">
+                  <li style="margin-left: -15px">
+                    <p style="font-weight: light; font-size: 1.25em;">Dodatki:</p>
+                  </li>
+                  <li *ngFor="let selAdd of selectionAdditionals.selected;">
+                    <h5><strong>{{ selAdd.additional.name }}</strong></h5>
+                  </li>
+                </ul>             
+              </div>
+              <div class="col-6 d-flex justify-content-start" *ngIf="selectionDecorations.selected.length != 0">               
+                <ul style="list-style: none;">
+                  <li style="margin-left: -15px">
+                    <p style="font-weight: light; font-size: 1.25em;">Dekoracje:</p>              
+                  </li>
+                  <li *ngFor="let selD of selectionDecorations.selected;">
+                    <h5><strong>{{ selD.decoration.name }}</strong></h5>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-10 d-flex justify-content-center">
+              <div>               
+                <button class="btn btn-lg btn-success" (click)="addOrder()" [disabled]="invalidForm">
+                  <span>
+                    <mat-icon aria-hidden="false">upload</mat-icon>
+                    Wygeneruj i pobierz zamówienie
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div style="bottom: 150px; position:fixed">
+            <button mat-button matStepperPrevious><span class="material-icons">keyboard_arrow_left</span></button>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper> 
+    </div>
+  </div>
+  
