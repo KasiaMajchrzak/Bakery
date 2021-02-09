@@ -2,27 +2,25 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import {ActivatedRoute, Router} from "@angular/router";
-import { Additional } from 'src/app/models/Additional';
 import { BaseProduct } from 'src/app/models/BaseProduct';
 import { Cake } from 'src/app/models/Cake';
 import { Cream } from 'src/app/models/Cream';
-import { Decoration } from 'src/app/models/Decoration';
 import { Order } from 'src/app/models/Order';
 import { OrdersAdditionals } from 'src/app/models/OrdersAdditionals';
 import { OrdersDecorations } from 'src/app/models/OrdersDecorations';
 import { DatabaseService } from 'src/app/services/database.service';
-import { NotificationService } from 'src/app/services/notification.service'
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
-  selector: 'app-birthday-cake',
-  templateUrl: './birthday-cake.component.html',
-  styleUrls: ['./birthday-cake.component.scss']
+  selector: 'app-mono-dessert',
+  templateUrl: './mono-dessert.component.html',
+  styleUrls: ['./mono-dessert.component.scss']
 })
-export class BirthdayCakeComponent implements OnInit {
+export class MonoDessertComponent implements OnInit {
+  baseProduct: BaseProduct;
   order: Order = new Order();
   ordersAdditionals: OrdersAdditionals[] = [];
   ordersDecorations: OrdersDecorations[] = [];
-  baseProduct: BaseProduct;
   totalPrice: number = 0;
   invalidForm = true;
   cakes: Cake[] = [];
@@ -44,7 +42,6 @@ export class BirthdayCakeComponent implements OnInit {
   dataSourceDecorations: MatTableDataSource<OrdersDecorations>;
   selectionDecorations = new SelectionModel<OrdersDecorations>(true, []);
   displayedColumnsDecorations: string[] = ['select', 'name', 'description', 'quantity', 'price'];
-  
 
   @ViewChild('paginatorCakes', { read: MatPaginator, static: false }) paginatorCakes: MatPaginator;
   @ViewChild('tableCakes', { read: MatSort, static: false }) sorterCakes: MatSort;
@@ -63,25 +60,17 @@ export class BirthdayCakeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("BirthdayComponent on init");
-    this.getBaseProduct('Tort');
+    this.getBaseProduct('Mono-deser');
     this.getCakes();
     this.getCreams();
     this.getAdditionals();
     this.getDecorations();
-    this.paginatorCakes._intl.itemsPerPageLabel = "Ilość elementów na stronie: ";
-    this.paginatorCreams._intl.itemsPerPageLabel = "Ilość elementów na stronie: ";
-    this.paginatorAdditionals._intl.itemsPerPageLabel = "Ilość elementów na stronie: ";
-    this.paginatorDecorations._intl.itemsPerPageLabel = "Ilość elementów na stronie: ";
   }
 
   getBaseProduct(name: string){
     this.service.SetRoute(`baseproduct/getbaseproductbyname?name=${name}`);
     this.service.GetObjList<any>().subscribe((data) => {
       this.baseProduct = data;
-      this.totalPrice = this.baseProduct.price;
-      this.order.baseProduct_Id = this.baseProduct.baseProduct_Id;
-      this.order.baseProduct = this.baseProduct;
     });
   }
 

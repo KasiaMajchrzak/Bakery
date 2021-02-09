@@ -1,0 +1,22 @@
+.mat-step, :host ::ng-deep .mat-table {
+    min-width: 100%;
+    width: 100% !important;
+}
+
+.cake-row {
+    padding: 8px !important;
+}
+
+.cake-card {
+    background: white; 
+    box-shadow: 0 0 1em grey; 
+    border-radius: 2em; 
+    padding: 8px; 
+    height: calc(100vh - 100px); 
+    margin: auto;
+}
+
+.table-responsive {
+    max-height: calc(100vh - 500px);
+    overflow: auto;
+}

@@ -1,27 +1,31 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { NotifierModule, NotifierOptions } from "angular-notifier";
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
-import { MonoDessertComponent } from './layout/mono-dessert/mono-dessert.component';
-import { BirthdayCakeComponent } from './layout/birthday-cake/birthday-cake.component';
 import { Connection } from './models/Connection';
 import { DatabaseService } from './services/database.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatCheckboxModule, MatDividerModule, MatIconModule, MatInputModule, MatPaginatorModule, MatSortModule, MatStepperIntl, MatStepperModule, MatTableModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatDividerModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatPaginatorModule, MatSidenavModule, MatSortModule, MatStepperModule, MatTableModule, MatToolbarModule } from '@angular/material';
 import { DividerModule } from "primeng/divider";
 import { NotificationService } from './services/notification.service';
-
+import { PanelMenuModule } from 'primeng/panelmenu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { BirthdayCakesComponent } from './layout/birthday-cakes/birthday-cakes.component';
+import { BirthdayCakeComponent } from './layout/birthday-cakes/birthday-cake/birthday-cake.component';
+import { MonoDessertsComponent } from './layout/mono-desserts/mono-desserts.component';
+import { MonoDessertComponent } from './layout/mono-desserts/mono-dessert/mono-dessert.component';
+import { CommonModule } from '@angular/common';
 
 const routes: Routes = [
   { path : '', component: HomeComponent},
+  { path : 'birthday-cakes', component: BirthdayCakesComponent },
   { path : 'birthday-cake', component: BirthdayCakeComponent },
+  { path : 'mono-desserts', component: MonoDessertsComponent },
   { path : 'mono-dessert', component: MonoDessertComponent }
 ];
 
@@ -72,9 +76,12 @@ const customNotifierOptions: NotifierOptions = {
     NavMenuComponent,
     HomeComponent,
     BirthdayCakeComponent,
-    MonoDessertComponent
+    MonoDessertComponent,
+    BirthdayCakesComponent,
+    MonoDessertsComponent
   ],
   imports: [
+    CommonModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,
@@ -90,7 +97,13 @@ const customNotifierOptions: NotifierOptions = {
     MatPaginatorModule, 
     MatSortModule,
     MatCheckboxModule,
-    NotifierModule.withConfig(customNotifierOptions)
+    NotifierModule.withConfig(customNotifierOptions),
+    MatSidenavModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatListModule,
+    PanelMenuModule,
+    MatProgressSpinnerModule
   ],
   providers: [Connection, DatabaseService, NotificationService],
   bootstrap: [AppComponent]
