@@ -27,5 +27,7 @@ namespace Bakery.Models
         public List<OrdersAdditionals> OrdersAdditionals { get; set; }
         [NotMapped]
         public List<OrdersDecorations> OrdersDecorations { get; set; }
+        [NotMapped]
+        public string OrderedOnString { get; set; }
     }
 }

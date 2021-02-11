@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatGridTileHeaderCssMatStyler, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import {ActivatedRoute, Router} from "@angular/router";
 import { Additional } from 'src/app/models/Additional';
 import { BaseProduct } from 'src/app/models/BaseProduct';
@@ -162,6 +162,7 @@ export class BirthdayCakeComponent implements OnInit {
       this.order.cream = this.selectionCreams.selected[0];
       this.order.cream_Id = this.selectionCreams.selected[0].cream_Id;
     }
+    this.totalPrice = this.totalPrice * this.order.servings;
     if(this.selectionAdditionals.selected.length > 0){
       for(var selected of this.selectionAdditionals.selected){
         this.totalPrice += (selected.additional.price * selected.quantity);
@@ -174,11 +175,7 @@ export class BirthdayCakeComponent implements OnInit {
       }
       this.order.ordersDecorations = this.selectionDecorations.selected;
     }
-    this.generateOrder();
-  }
-
-  generateOrder(){
-   
+    this.addOrder();
   }
 
   addOrder(){
