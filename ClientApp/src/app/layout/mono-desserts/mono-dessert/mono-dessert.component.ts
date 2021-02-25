@@ -2,6 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import {ActivatedRoute, Router} from "@angular/router";
+import { MessageService } from 'primeng/api';
 import { BaseProduct } from 'src/app/models/BaseProduct';
 import { Cake } from 'src/app/models/Cake';
 import { Cream } from 'src/app/models/Cream';
@@ -9,7 +10,6 @@ import { Order } from 'src/app/models/Order';
 import { OrdersAdditionals } from 'src/app/models/OrdersAdditionals';
 import { OrdersDecorations } from 'src/app/models/OrdersDecorations';
 import { DatabaseService } from 'src/app/services/database.service';
-import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-mono-dessert',
@@ -17,12 +17,14 @@ import { NotificationService } from 'src/app/services/notification.service';
   styleUrls: ['./mono-dessert.component.scss']
 })
 export class MonoDessertComponent implements OnInit {
-  baseProduct: BaseProduct;
+  urlIdParam: number;
+  baseProduct: BaseProduct = new BaseProduct();
   order: Order = new Order();
   ordersAdditionals: OrdersAdditionals[] = [];
   ordersDecorations: OrdersDecorations[] = [];
   totalPrice: number = 0;
   invalidForm = true;
+  today = new Date();
   cakes: Cake[] = [];
   dataSourceCakes: MatTableDataSource<Cake>;
   selectionCakes = new SelectionModel<Cake>(false, []);
@@ -36,12 +38,12 @@ export class MonoDessertComponent implements OnInit {
   additionals: OrdersAdditionals[] = [];
   dataSourceAdditionals: MatTableDataSource<OrdersAdditionals>;
   selectionAdditionals = new SelectionModel<OrdersAdditionals>(true, []);
-  displayedColumnsAdditionals: string[] = ['select', 'name', 'description', 'quantity', 'price'];
+  displayedColumnsAdditionals: string[] = ['select', 'name', 'description', 'price'];
 
   decorations: OrdersDecorations[] = []
   dataSourceDecorations: MatTableDataSource<OrdersDecorations>;
   selectionDecorations = new SelectionModel<OrdersDecorations>(true, []);
-  displayedColumnsDecorations: string[] = ['select', 'name', 'description', 'quantity', 'price'];
+  displayedColumnsDecorations: string[] = ['select', 'name', 'description', 'price'];
 
   @ViewChild('paginatorCakes', { read: MatPaginator, static: false }) paginatorCakes: MatPaginator;
   @ViewChild('tableCakes', { read: MatSort, static: false }) sorterCakes: MatSort;
@@ -56,7 +58,7 @@ export class MonoDessertComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private service: DatabaseService,
-    private notification: NotificationService
+    private messageService: MessageService
   ) { }
 
   ngOnInit() {
@@ -65,12 +67,15 @@ export class MonoDessertComponent implements OnInit {
     this.getCreams();
     this.getAdditionals();
     this.getDecorations();
+    this.detectIdParam();
   }
 
   getBaseProduct(name: string){
     this.service.SetRoute(`baseproduct/getbaseproductbyname?name=${name}`);
     this.service.GetObjList<any>().subscribe((data) => {
       this.baseProduct = data;
+      this.order.baseProduct_Id = this.baseProduct.baseProduct_Id;
+      this.totalPrice = this.baseProduct.price;
     });
   }
 
@@ -78,6 +83,8 @@ export class MonoDessertComponent implements OnInit {
     this.service.SetRoute('cake/getcakes');
     this.service.GetObjList<any>().subscribe((data) => {
       this.cakes = data;
+      this.cakes.forEach(x => x.price = x.price/4);
+
       this.dataSourceCakes = new MatTableDataSource<Cake>(this.cakes);
       this.setDataSourceConf(this.dataSourceCakes, this.sorterCakes, this.paginatorCakes);
     });
@@ -86,7 +93,10 @@ export class MonoDessertComponent implements OnInit {
   getCreams(){
     this.service.SetRoute('cream/getcreams');
     this.service.GetObjList<any>().subscribe((data) => {
-      this.creams = data;
+      for(var i = 0; i < data.length; i++){
+        this.creams.push(data[i]);
+      }
+      this.creams.forEach(x => x.price = x.price/4);
       this.dataSourceCreams = new MatTableDataSource<Cream>(this.creams);
       this.setDataSourceConf(this.dataSourceCreams, this.sorterCreams, this.paginatorCreams);
     });
@@ -98,6 +108,10 @@ export class MonoDessertComponent implements OnInit {
       for(var i = 0; i< data.length; i++){
         this.additionals.push(new OrdersAdditionals(new Order(), data[i], 1));
       }
+      this.additionals.forEach(x => {
+        if(x.additional.price > 0) 
+          x.additional.price = x.additional.price/2;
+      });
       this.dataSourceAdditionals = new MatTableDataSource<OrdersAdditionals>(this.additionals);
       this.setDataSourceConf(this.dataSourceAdditionals, this.sorterAdditionals, this.paginatorAdditionals);
     });
@@ -109,6 +123,10 @@ export class MonoDessertComponent implements OnInit {
       for(var i = 0; i< data.length; i++){
         this.decorations.push(new OrdersDecorations(new Order(), data[i], 1));
       }
+      this.decorations.forEach(x => {
+        if(x.decoration.price > 0) 
+          x.decoration.price = x.decoration.price/5;
+      });
       this.dataSourceDecorations = new MatTableDataSource<OrdersDecorations>(this.decorations);
       this.setDataSourceConf(this.dataSourceDecorations, this.sorterDecorations, this.paginatorDecorations);
     });
@@ -164,21 +182,62 @@ export class MonoDessertComponent implements OnInit {
       }
       this.order.ordersDecorations = this.selectionDecorations.selected;
     }
-    this.generateOrder();
-  }
 
-  generateOrder(){
-   
+    this.order.totalPrice = this.totalPrice;
   }
 
   addOrder(){
+    const a = document.createElement('a');
     console.log('addOrder()', this.order);
     this.service.SetRoute('order/addorder');
-    this.service.AddObj<any>(this.order).subscribe((data) => {
-      if(data.result){
-        this.notification.showNotification('success', 'Dodano zamówienie!');
+    this.service.AddObjPDF<any>(this.order).subscribe((data) => {
+      if(!data.result){
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        a.href = url;
+
+        let filename = 'Zamówienie.pdf';
+        a.download = filename;
+        a.click();
+        this.messageService.add({ severity: 'success', summary: 'Dodano zamówienie!', detail: 'Wygenerowane zamówienie w formacie pdf zostało pobrane.'});
       } else {
-        this.notification.showNotification('danger', 'Nie dodano zamówienia.')
+        this.messageService.add({ severity: 'error', summary: 'Nie dodano zamówienia.'});
+      } 
+    });
+  }
+
+  getTemplate() {
+    this.service.SetRoute(`order/gettemplatebyid?id=${this.urlIdParam}`);
+    this.service.GetObjList<any>().subscribe((data) => {
+      console.log('data', data);
+      this.order.baseProduct = data.baseProduct;
+      this.order.cake_Id = data.cake_Id;
+      this.order.cream_Id = data.cream_Id;
+      this.order.ordersAdditionals = data.ordersAdditionals;
+      this.order.ordersDecorations = data.ordersDecorations;
+      this.order.totalPrice = this.order.totalPrice;
+      this.order.servings = data.servings;
+      
+      var selCake = this.dataSourceCakes.data.find(x => x.cake_Id === data.cake_Id);
+      this.changed(true, this.selectionCakes, selCake);
+      var selCream = this.dataSourceCreams.data.find(x => x.cream_Id === data.cream_Id);
+      this.changed(true, this.selectionCreams, selCream);
+      for(var orderAdd of this.order.ordersAdditionals) {
+        var selAdd = this.dataSourceAdditionals.data.find(x => x.additional_Id === orderAdd.additional_Id);
+        this.changed(true, this.selectionAdditionals, selAdd);
+      }
+      for(var orderDecor of this.order.ordersDecorations) {
+        var selDec = this.dataSourceDecorations.data.find(x => x.decoration_Id === orderDecor.decoration_Id);
+        this.changed(true, this.selectionDecorations, selDec);
+      }
+    });
+  }
+
+  detectIdParam() {
+    this.route.params.subscribe((data) => {
+      this.urlIdParam = data.id;
+      if(this.urlIdParam) {
+        this.getTemplate();
       }
     });
   }

@@ -5,16 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 using Bakery.Errors;
 using Bakery.Models;
-using DinkToPdf;
 
 namespace Bakery.Toolbox
 {
     public class PrintoutTemplateGenerator
     {
-        public string GenerateHtml(Order order, List<OrdersAdditionals> ordersAdditionals, List<OrdersDecorations> ordersDecorations)
+        public static string GenerateHtml(Order order, List<OrdersAdditionals> ordersAdditionals, List<OrdersDecorations> ordersDecorations)
         {
             try
             {
+                if (order.BaseProduct.Name != "Tort")
+                {
+                    order.Cake.Price = order.Cake.Price / 4;
+                    order.Cream.Price = order.Cream.Price / 4;
+                }
                 decimal additionalPrice = 0;
                 additionalPrice += order.Cake.Price;
                 additionalPrice += order.Cream.Price;
@@ -23,6 +27,10 @@ namespace Bakery.Toolbox
                 {
                     foreach (var additional in ordersAdditionals)
                     {
+                        if (order.BaseProduct.Name != "Tort")
+                        {
+                            additional.Additional.Price = additional.Additional.Price / 2;
+                        }
                         additionalPrice += additional.Additional.Price;
                     }
                 }
@@ -30,6 +38,10 @@ namespace Bakery.Toolbox
                 {
                     foreach(var decoration in ordersDecorations)
                     {
+                        if (order.BaseProduct.Name != "Tort")
+                        {
+                            decoration.Decoration.Price = decoration.Decoration.Price / 5;
+                        }
                         additionalPrice += decoration.Decoration.Price;
                     }
                 }
@@ -52,12 +64,12 @@ namespace Bakery.Toolbox
                 ");
                 stringBuilder.AppendFormat(@"
                     <body class='bg-light'>
-                        <div class='container-fluid row col-12 d-flex justify-content-center'>
-                            <div class='container-fluid row col-10 d-flex justify-content-between bg-dark text-white'>
+                        <div class='container-fluid row col-12 m-0 d-flex justify-content-between bg-dark text-white'>
                                 <h3>Zamówienie - {0}</h3>
                                 <h4>{1}</h4>
                             </div>", order.BaseProduct.Name, order.OrderedOnString);
                 stringBuilder.AppendFormat(@"
+                       <div class='container-fluid row col-12 d-flex justify-content-center'>
                         <div class='container-fluid row col-10 d-flex justify-content-center bg-light text-dark mt-3'>
                             <h5>Biszkopt</h5>
                             <table style='width:100%'>
@@ -72,7 +84,7 @@ namespace Bakery.Toolbox
                                 <td>{2} zł/kg</td>
                               </tr>
                             </table>
-                          </div>", order.Cake.Name, order.Cake.Description, order.Cake.Price);
+                          </div>", order.Cake.Name, order.Cake.Description, order.Cake.Price.ToString("0.##"));
                 stringBuilder.AppendFormat(@"
                         <div class='container-fluid row col-10 d-flex justify-content-center bg-light text-dark mt-3'>
                              <h5>Krem</h5>
@@ -88,7 +100,7 @@ namespace Bakery.Toolbox
                                     <td>{2} zł/kg</td>
                                 </tr>
                             </table>
-                          </div>", order.Cream.Name, order.Cream.Description, order.Cream.Price);
+                          </div>", order.Cream.Name, order.Cream.Description, order.Cream.Price.ToString("0.##"));
                 if (ordersAdditionals.Count > 0)
                 {
                     stringBuilder.AppendLine(@"
@@ -108,8 +120,8 @@ namespace Bakery.Toolbox
                                       <th>{0}</th>
                                       <th>{1}</th>
                                       <th>{2}</th>
-                                      <th>{3}</th>
-                                    </tr>", additional.Additional.Name, additional.Additional.Description, additional.Quantity, additional.Additional.Price);
+                                      <th>{3} zł</th>
+                                    </tr>", additional.Additional.Name, additional.Additional.Description, additional.Quantity, additional.Additional.Price.ToString("0.##"));
                     }
                     stringBuilder.AppendLine("</table></div>");
                 }
@@ -132,8 +144,8 @@ namespace Bakery.Toolbox
                                       <th>{0}</th>
                                       <th>{1}</th>
                                       <th>{2}</th>
-                                      <th>{3}</th>
-                                    </tr>", decoration.Decoration.Name, decoration.Decoration.Description, decoration.Quantity, decoration.Decoration.Price);
+                                      <th>{3} zł</th>
+                                    </tr>", decoration.Decoration.Name, decoration.Decoration.Description, decoration.Quantity, decoration.Decoration.Price.ToString("0.##"));
                     }
                     stringBuilder.AppendLine("</table></div>");
                 }
@@ -149,7 +161,7 @@ namespace Bakery.Toolbox
                                   </div>
                                 </div>
                                </body>
-                             </html>", order.BaseProduct.Price, additionalPrice, order.Servings, order.TotalPrice);
+                             </html>", order.BaseProduct.Price.ToString("0.##"), additionalPrice.ToString("0.##"), order.Servings, order.TotalPrice.ToString("0.##"));
 
                 return stringBuilder.ToString();
             }

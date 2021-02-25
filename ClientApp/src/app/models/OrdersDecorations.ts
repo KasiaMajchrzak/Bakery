@@ -8,16 +8,17 @@ export class OrdersDecorations {
             this.order = order;
         }
         if(decoration){
-            this.decoration_id = decoration.decoration_Id;
+            this.decoration_Id = decoration.decoration_Id;
             this.decoration = decoration;
         }
         this.quantity = quantity ? quantity : 1;
     }
 
     id: number;
-    order_id: number;
-    decoration_id: number;
+    order_Id: number;
+    decoration_Id: number;
     quantity: number;
     order: Order;
     decoration: Decoration;
+    details?: string;
 }

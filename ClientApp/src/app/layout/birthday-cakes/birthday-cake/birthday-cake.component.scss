@@ -5,6 +5,7 @@
 
 .cake-row {
     padding: 8px !important;
+    height: 60px !important;
 }
 
 .cake-card {
@@ -19,4 +20,9 @@
 .table-responsive {
     max-height: calc(100vh - 500px);
     overflow: auto;
+}
+
+h5, h6 {
+    font-weight: 400;
+    font-size: 1.25rem;
 }

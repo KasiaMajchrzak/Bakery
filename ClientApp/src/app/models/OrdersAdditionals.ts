@@ -8,16 +8,17 @@ export class OrdersAdditionals {
             this.order = order;
         }
         if(additional){
-            this.additional_id = additional.additional_Id;
+            this.additional_Id = additional.additional_Id;
             this.additional = additional;
         }
         this.quantity = quantity ? quantity : 1;
     }
 
     id: number;
-    order_id: number;
-    additional_id: number;
+    order_Id: number;
+    additional_Id: number;
     quantity: number;
     order: Order;
     additional: Additional;
+    details?: string;
 }

@@ -1,3 +1,6 @@
+using Bakery.Toolbox;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -5,14 +8,19 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
 
 namespace Bakery
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly Microsoft.AspNetCore.Hosting.IHostingEnvironment _hostingEnvironment;
+        public Startup(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment hostingEnvironment)
         {
             Configuration = configuration;
+            var contentRoot = configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public IConfiguration Configuration { get; }
@@ -26,6 +34,14 @@ namespace Bakery
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            var architectureFolder = (IntPtr.Size == 8) ? "64 bit" : "32 bit";
+            var wkHtmlToPdfPath = Path.Combine(_hostingEnvironment.ContentRootPath, $"wkhtmltox\\v0.12.4\\{architectureFolder}\\libwkhtmltox");
+            CustomAssemblyLoadContext context = new CustomAssemblyLoadContext();
+            context.LoadUnmanagedLibrary(wkHtmlToPdfPath);
+
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+            //services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,6 +86,7 @@ namespace Bakery
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
         }
     }
 }

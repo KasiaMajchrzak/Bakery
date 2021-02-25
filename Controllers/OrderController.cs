@@ -2,6 +2,7 @@
 using Bakery.Errors;
 using Bakery.Models;
 using Bakery.Services;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -17,11 +18,27 @@ namespace Bakery.Controllers
     {
         private readonly IManagerOrder _managerOrder;
         private readonly IConfiguration _config;
+        private IConverter _converter;
 
-        public OrderController(IConfiguration config)
+        public OrderController(IConfiguration config, IConverter converter)
         {
             _config = config;
-            _managerOrder = new OrderManager(_config);
+            _converter = converter;
+            _managerOrder = new OrderManager(_config, _converter);
+        }
+
+        [HttpGet("getordertemplates")]
+        public IActionResult GetOrderTemplatesByBaseProductId(int baseProductId)
+        {
+            var result = _managerOrder.GetTemplatesByBaseProduct(baseProductId);
+            return Json(result);
+        }
+
+        [HttpGet("gettemplatebyid")]
+        public IActionResult GetTemplateById (int id)
+        {
+            var result = _managerOrder.GetTemplateById(id);
+            return Json(result);
         }
 
         [HttpPost("addorder")]
@@ -29,8 +46,8 @@ namespace Bakery.Controllers
         {
             try
             {
-                var isAdded = _managerOrder.AddOrder(order);
-                return Json(new { result = isAdded });
+                var pdfFile = _managerOrder.AddOrder(order);
+                return File(pdfFile, "application/pdf");
             }
             catch(Exception ex)
             {

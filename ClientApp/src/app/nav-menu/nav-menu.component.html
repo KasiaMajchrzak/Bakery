@@ -6,12 +6,7 @@
           <button class="btn sidebar-button" mat-button (click)="navigate(item)">
             <mat-icon aria-hidden="false">{{ item.icon }}</mat-icon>
             {{ item.title }}
-          </button>
-          <!-- <a class="btn sidebar-button" mat-button data-toggle="collapse" href="#{{item.path}}" 
-            role="button" aria-expanded="false" [attr.aria-controls]="item.path"  *ngIf="item.children && item.children.length !== 0">
-            <mat-icon aria-hidden="false">{{ item.icon }}</mat-icon>
-            {{ item.title }}
-          </a> -->
+          </button>      
         </div>
         <div *ngIf="item.children && item.children.length !== 0">
           <ng-container *ngFor="let child of item.children">
@@ -21,14 +16,6 @@
             </button>
           </ng-container>
         </div>
-        <!-- <div class="collapse" id="{{item.path}}" *ngIf="item.children && item.children.length !== 0">
-          <ng-container *ngFor="let child of item.children">
-            <button class="btn sidebar-button" mat-button (click)="navigate(child)">
-              <mat-icon aria-hidden="false">{{ child.icon }}</mat-icon>
-              {{ child.title }}
-            </button>
-          </ng-container>
-        </div> -->
       </ng-container>
     </div>
   </mat-sidenav>

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Connection } from "../models/Connection";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../../environments/environment";
 import { Observable } from "rxjs";
 
@@ -24,8 +24,19 @@ export class DatabaseService {
     return this.http.post<T>(this.route, _obj);
   }
 
+  AddObjPDF<T>(_obj: any): Observable<T> {
+    let headers = new HttpHeaders();
+    headers.set('Accept', 'application/pdf');
+    return this.http.post<T>(this.route, _obj, {
+      headers: headers,
+      responseType: 'blob' as 'json'
+    });
+  }
+
   GetObjList<T>(): Observable<T> {
-    return this.http.get<T>(this.route);
+    return this.http.get<T>(this.route, {
+      responseType: 'json'
+    });
   }
 
   UpdateObj<T>(_obj: any): Observable<T> {

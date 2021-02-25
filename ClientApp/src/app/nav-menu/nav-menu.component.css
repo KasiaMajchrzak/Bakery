@@ -1,4 +1,4 @@
-/* a.sidenav-brand {
+a.sidenav-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
@@ -11,7 +11,7 @@ html {
   html {
     font-size: 16px;
   }
-} */
+}
 
 .box-shadow {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
@@ -36,8 +36,11 @@ html {
 .sidebar-button {
   color: black;
   width: 100%;
+  margin-right: 50px;
   display: flex;
-  justify-content: start;
+  font-size: 16px;
+  font-weight: 400;
+  justify-content: space-between;
 }
 
 .sidebar-child-button {

@@ -28,14 +28,14 @@ namespace Bakery.Controllers
         public IActionResult GetBaseProducts()
         {
             List<BaseProduct> baseProducts = _managerBaseProduct.GetBaseProducts();
-            return Ok(baseProducts);
+            return Json(baseProducts);
         }
 
         [HttpGet("getbaseproductbyname")]
         public IActionResult GetBaseProductByName(string name)
         {
             BaseProduct result = _managerBaseProduct.GetBaseProductByName(name);
-            return Ok(result);
+            return Json(result);
         }
     }
 }

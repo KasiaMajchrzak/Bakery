@@ -25,3 +25,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   height: calc(100vh - 180px); 
   margin: auto;
 }
+
+.card-title {
+  margin: 16px;
+}
+
+button, .mat-icon-button, .mat-button {
+  outline: none !important;
+}
+

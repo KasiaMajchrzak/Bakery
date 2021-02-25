@@ -26,7 +26,7 @@ namespace Bakery.Controllers
         public IActionResult GetCakes()
         {
             var result = _managerCake.GetCakes();
-            return Ok(result);
+            return Json(result);
         }
     }
 }

@@ -8,6 +8,8 @@ namespace Bakery.Contracts.Repositories
 {
     public interface IRepositoryOrder
     {
-        bool AddOrder(Order order);
+        List<Order> GetTemplatesByBaseProduct(int baseProductId);
+        Order GetTemplateById(int id);
+        byte[] AddOrder(Order order);
     }
 }

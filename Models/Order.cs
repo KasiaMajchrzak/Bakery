@@ -16,7 +16,10 @@ namespace Bakery.Models
         public int Cake_Id { get; set; }
         public int Servings { get; set; }
         public DateTime OrderedOn { get; set; }
-        public Decimal TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
+        public DateTime CompletionDate { get; set; }
+        public bool IsTemplate { get; set; }
+        public string TemplateName { get; set; }
         [ForeignKey("BaseProduct_Id")]
         public virtual BaseProduct BaseProduct { get; set; }
         [ForeignKey("Cream_Id")]

@@ -2,6 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatGridTileHeaderCssMatStyler, MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import {ActivatedRoute, Router} from "@angular/router";
+import { MessageService } from 'primeng/api';
 import { Additional } from 'src/app/models/Additional';
 import { BaseProduct } from 'src/app/models/BaseProduct';
 import { Cake } from 'src/app/models/Cake';
@@ -11,7 +12,6 @@ import { Order } from 'src/app/models/Order';
 import { OrdersAdditionals } from 'src/app/models/OrdersAdditionals';
 import { OrdersDecorations } from 'src/app/models/OrdersDecorations';
 import { DatabaseService } from 'src/app/services/database.service';
-import { NotificationService } from 'src/app/services/notification.service'
 
 @Component({
   selector: 'app-birthday-cake',
@@ -19,47 +19,49 @@ import { NotificationService } from 'src/app/services/notification.service'
   styleUrls: ['./birthday-cake.component.scss']
 })
 export class BirthdayCakeComponent implements OnInit {
+  urlIdParam: number;
   order: Order = new Order();
   ordersAdditionals: OrdersAdditionals[] = [];
   ordersDecorations: OrdersDecorations[] = [];
-  baseProduct: BaseProduct;
+  baseProduct: BaseProduct = new BaseProduct();
   totalPrice: number = 0;
   invalidForm = true;
   cakes: Cake[] = [];
-  dataSourceCakes: MatTableDataSource<Cake>;
+  dataSourceCakes: MatTableDataSource<Cake> = new MatTableDataSource<Cake>();
   selectionCakes = new SelectionModel<Cake>(false, []);
   displayedColumnsCakes: string[] = ['select', 'name', 'type', 'flavour', 'description', 'price'];
+  today = new Date();
 
   creams: Cream[] = [];
-  dataSourceCreams: MatTableDataSource<Cream>;
+  dataSourceCreams: MatTableDataSource<Cream> = new MatTableDataSource<Cream>();
   selectionCreams = new SelectionModel<Cream>(false, []);
   displayedColumnsCreams: string[] = ['select', 'name', 'type', 'flavour', 'description', 'price'];
 
   additionals: OrdersAdditionals[] = [];
-  dataSourceAdditionals: MatTableDataSource<OrdersAdditionals>;
+  dataSourceAdditionals: MatTableDataSource<OrdersAdditionals> = new MatTableDataSource<OrdersAdditionals>();
   selectionAdditionals = new SelectionModel<OrdersAdditionals>(true, []);
   displayedColumnsAdditionals: string[] = ['select', 'name', 'description', 'quantity', 'price'];
 
   decorations: OrdersDecorations[] = []
-  dataSourceDecorations: MatTableDataSource<OrdersDecorations>;
+  dataSourceDecorations: MatTableDataSource<OrdersDecorations> = new MatTableDataSource<OrdersDecorations>();
   selectionDecorations = new SelectionModel<OrdersDecorations>(true, []);
   displayedColumnsDecorations: string[] = ['select', 'name', 'description', 'quantity', 'price'];
   
 
-  @ViewChild('paginatorCakes', { read: MatPaginator, static: false }) paginatorCakes: MatPaginator;
+  @ViewChild('paginatorCakes', { static: false }) paginatorCakes: MatPaginator;
   @ViewChild('tableCakes', { read: MatSort, static: false }) sorterCakes: MatSort;
-  @ViewChild('paginatorCreams', { read: MatPaginator, static: false }) paginatorCreams: MatPaginator;
+  @ViewChild('paginatorCreams', { static: false }) paginatorCreams: MatPaginator;
   @ViewChild('tableCreams', { read: MatSort, static: false }) sorterCreams: MatSort;
-  @ViewChild('paginatorAdditionals', { read: MatPaginator, static: false }) paginatorAdditionals: MatPaginator;
+  @ViewChild('paginatorAdditionals', { static: false }) paginatorAdditionals: MatPaginator;
   @ViewChild('tableAdditionals', { read: MatSort, static: false }) sorterAdditionals: MatSort;
-  @ViewChild('paginatorDecorations', { read: MatPaginator, static: false }) paginatorDecorations: MatPaginator;
+  @ViewChild('paginatorDecorations', { static: false }) paginatorDecorations: MatPaginator;
   @ViewChild('tableDecorations', { read: MatSort, static: false }) sorterDecorations: MatSort;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private service: DatabaseService,
-    private notification: NotificationService
+    private messageService: MessageService
   ) { }
 
   ngOnInit() {
@@ -68,10 +70,7 @@ export class BirthdayCakeComponent implements OnInit {
     this.getCreams();
     this.getAdditionals();
     this.getDecorations();
-    this.paginatorCakes._intl.itemsPerPageLabel = "Ilość elementów na stronie: ";
-    this.paginatorCreams._intl.itemsPerPageLabel = "Ilość elementów na stronie: ";
-    this.paginatorAdditionals._intl.itemsPerPageLabel = "Ilość elementów na stronie: ";
-    this.paginatorDecorations._intl.itemsPerPageLabel = "Ilość elementów na stronie: ";
+    this.detectIdParam();
   }
 
   getBaseProduct(name: string){
@@ -89,7 +88,8 @@ export class BirthdayCakeComponent implements OnInit {
     this.service.GetObjList<any>().subscribe((data) => {
       this.cakes = data;
       this.dataSourceCakes = new MatTableDataSource<Cake>(this.cakes);
-      this.setDataSourceConf(this.dataSourceCakes, this.sorterCakes, this.paginatorCakes);
+      this.dataSourceCakes.sort = this.sorterCakes;
+      this.dataSourceCakes.paginator = this.paginatorCakes;
     });
   }
 
@@ -98,7 +98,8 @@ export class BirthdayCakeComponent implements OnInit {
     this.service.GetObjList<any>().subscribe((data) => {
       this.creams = data;
       this.dataSourceCreams = new MatTableDataSource<Cream>(this.creams);
-      this.setDataSourceConf(this.dataSourceCreams, this.sorterCreams, this.paginatorCreams);
+      this.dataSourceCreams.sort = this.sorterCreams;
+      this.dataSourceCreams.paginator = this.paginatorCreams;
     });
   }
 
@@ -109,7 +110,8 @@ export class BirthdayCakeComponent implements OnInit {
         this.additionals.push(new OrdersAdditionals(new Order(), data[i], 1));
       }
       this.dataSourceAdditionals = new MatTableDataSource<OrdersAdditionals>(this.additionals);
-      this.setDataSourceConf(this.dataSourceAdditionals, this.sorterAdditionals, this.paginatorAdditionals);
+      this.dataSourceAdditionals.sort = this.sorterAdditionals;
+      this.dataSourceAdditionals.paginator = this.paginatorAdditionals;
     });
   }
 
@@ -120,13 +122,9 @@ export class BirthdayCakeComponent implements OnInit {
         this.decorations.push(new OrdersDecorations(new Order(), data[i], 1));
       }
       this.dataSourceDecorations = new MatTableDataSource<OrdersDecorations>(this.decorations);
-      this.setDataSourceConf(this.dataSourceDecorations, this.sorterDecorations, this.paginatorDecorations);
+      this.dataSourceDecorations.sort = this.sorterDecorations;
+      this.dataSourceDecorations.paginator = this.paginatorDecorations;
     });
-  }
-
-  setDataSourceConf(dataSource: MatTableDataSource<any>, sorter: MatSort, paginator: MatPaginator){
-    dataSource.sort = sorter;
-    dataSource.paginator = paginator;
   }
 
   applyFilter(event, dataSource: MatTableDataSource<any>){
@@ -162,7 +160,10 @@ export class BirthdayCakeComponent implements OnInit {
       this.order.cream = this.selectionCreams.selected[0];
       this.order.cream_Id = this.selectionCreams.selected[0].cream_Id;
     }
-    this.totalPrice = this.totalPrice * this.order.servings;
+    if(this.order.servings)
+      this.order.totalPrice = this.totalPrice * this.order.servings;
+    else 
+      this.order.totalPrice = this.totalPrice;
     if(this.selectionAdditionals.selected.length > 0){
       for(var selected of this.selectionAdditionals.selected){
         this.totalPrice += (selected.additional.price * selected.quantity);
@@ -175,17 +176,62 @@ export class BirthdayCakeComponent implements OnInit {
       }
       this.order.ordersDecorations = this.selectionDecorations.selected;
     }
-    this.addOrder();
+
+    this.order.totalPrice = this.totalPrice;
   }
 
   addOrder(){
+    const a = document.createElement('a');
     console.log('addOrder()', this.order);
     this.service.SetRoute('order/addorder');
-    this.service.AddObj<any>(this.order).subscribe((data) => {
-      if(data.result){
-        this.notification.showNotification('success', 'Dodano zamówienie!');
+    this.service.AddObjPDF<any>(this.order).subscribe((data) => {
+      if(!data.result){
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        a.href = url;
+
+        let filename = 'Zamówienie.pdf';
+        a.download = filename;
+        a.click();
+        this.messageService.add({ severity: 'success', summary: 'Dodano zamówienie!', detail: 'Wygenerowane zamówienie w formacie pdf zostało pobrane.'});
       } else {
-        this.notification.showNotification('danger', 'Nie dodano zamówienia.')
+        this.messageService.add({ severity: 'error', summary: 'Nie dodano zamówienia.'});
+      } 
+    });
+  }
+
+  getTemplate() {
+    this.service.SetRoute(`order/gettemplatebyid?id=${this.urlIdParam}`);
+    this.service.GetObjList<any>().subscribe((data) => {
+      console.log('data', data);
+      this.order.baseProduct = data.baseProduct;
+      this.order.cake_Id = data.cake_Id;
+      this.order.cream_Id = data.cream_Id;
+      this.order.ordersAdditionals = data.ordersAdditionals;
+      this.order.ordersDecorations = data.ordersDecorations;
+      this.order.totalPrice = this.order.totalPrice;
+      this.order.servings = data.servings;
+      
+      var selCake = this.dataSourceCakes.data.find(x => x.cake_Id === data.cake_Id);
+      this.changed(true, this.selectionCakes, selCake);
+      var selCream = this.dataSourceCreams.data.find(x => x.cream_Id === data.cream_Id);
+      this.changed(true, this.selectionCreams, selCream);
+      for(var orderAdd of this.order.ordersAdditionals) {
+        var selAdd = this.dataSourceAdditionals.data.find(x => x.additional_Id === orderAdd.additional_Id);
+        this.changed(true, this.selectionAdditionals, selAdd);
+      }
+      for(var orderDecor of this.order.ordersDecorations) {
+        var selDec = this.dataSourceDecorations.data.find(x => x.decoration_Id === orderDecor.decoration_Id);
+        this.changed(true, this.selectionDecorations, selDec);
+      }
+    });
+  }
+
+  detectIdParam() {
+    this.route.params.subscribe((data) => {
+      this.urlIdParam = data.id;
+      if(this.urlIdParam) {
+        this.getTemplate();
       }
     });
   }

@@ -10,13 +10,6 @@ import { DatabaseService } from "../services/database.service";
 })
 
 export class HomeComponent implements OnInit {
-  baseProducts: any[] = [];
-  selectedBaseProduct: any;
-
-  menuItems: any[] = [
-    { title: 'TORTY', path: 'birthday-cake'},
-    { title: 'MONO-DESERY', path: 'mono-dessert'}
-  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -25,16 +18,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getBaseProducts();
     console.log("Home ngOnInit");
-  }
-
-  getBaseProducts() {
-    this.service.SetRoute("baseproduct/getbaseproducts");
-    this.service.GetObjList().subscribe(data => {
-      this.baseProducts.push(data);
-      console.log('getBaseProducts()', data);
-    });
   }
 
   navigate(path: string){

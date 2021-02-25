@@ -14,6 +14,7 @@ namespace Bakery.Models
         public int Order_Id { get; set; }
         public int Additional_Id { get; set; }
         public int Quantity { get; set; }
+        public string Details { get; set; }
         [ForeignKey("Order_Id")]
         public virtual Order Order { get; set; }
         [ForeignKey("Additional_Id")]
