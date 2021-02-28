@@ -1,7 +1,9 @@
 import { SelectionModel } from '@angular/cdk/collections';
+import { DecimalPipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import {ActivatedRoute, Router} from "@angular/router";
+import notify from 'devextreme/ui/notify';
 import { MessageService } from 'primeng/api';
 import { BaseProduct } from 'src/app/models/BaseProduct';
 import { Cake } from 'src/app/models/Cake';
@@ -57,11 +59,11 @@ export class MonoDessertComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private service: DatabaseService,
-    private messageService: MessageService
+    private service: DatabaseService
   ) { }
 
   ngOnInit() {
+    this.order.totalPrice = 0;
     this.getBaseProduct('Mono-deser');
     this.getCakes();
     this.getCreams();
@@ -173,22 +175,23 @@ export class MonoDessertComponent implements OnInit {
     if(this.selectionAdditionals.selected.length > 0){
       for(var selected of this.selectionAdditionals.selected){
         this.totalPrice += (selected.additional.price * selected.quantity);
+        this.order.totalPrice += (selected.additional.price * selected.quantity);
       }
       this.order.ordersAdditionals = this.selectionAdditionals.selected;
     }
     if(this.selectionDecorations.selected.length > 0){
       for(var selectedD of this.selectionDecorations.selected){
         this.totalPrice += (selectedD.decoration.price * selectedD.quantity);
+        this.order.totalPrice += (selectedD.decoration.price * selectedD.quantity);
       }
       this.order.ordersDecorations = this.selectionDecorations.selected;
     }
-
-    this.order.totalPrice = this.totalPrice;
+    this.order.totalPrice = this.totalPrice * this.order.servings;
+    this.order.discount = this.calculateDiscount(this.order.totalPrice);
   }
 
   addOrder(){
     const a = document.createElement('a');
-    console.log('addOrder()', this.order);
     this.service.SetRoute('order/addorder');
     this.service.AddObjPDF<any>(this.order).subscribe((data) => {
       if(!data.result){
@@ -199,9 +202,9 @@ export class MonoDessertComponent implements OnInit {
         let filename = 'Zamówienie.pdf';
         a.download = filename;
         a.click();
-        this.messageService.add({ severity: 'success', summary: 'Dodano zamówienie!', detail: 'Wygenerowane zamówienie w formacie pdf zostało pobrane.'});
+        notify({ message: 'Dodano zamówienie!', position: 'top right', width: '450px' }, 'success', 2000);
       } else {
-        this.messageService.add({ severity: 'error', summary: 'Nie dodano zamówienia.'});
+        notify({ message: 'Nie dodano zamówienia.', position: 'top right', width: '450px' }, 'error', 2000);
       } 
     });
   }
@@ -209,7 +212,6 @@ export class MonoDessertComponent implements OnInit {
   getTemplate() {
     this.service.SetRoute(`order/gettemplatebyid?id=${this.urlIdParam}`);
     this.service.GetObjList<any>().subscribe((data) => {
-      console.log('data', data);
       this.order.baseProduct = data.baseProduct;
       this.order.cake_Id = data.cake_Id;
       this.order.cream_Id = data.cream_Id;
@@ -240,5 +242,22 @@ export class MonoDessertComponent implements OnInit {
         this.getTemplate();
       }
     });
+  }
+
+  calculateDiscount(totalPrice: number): number {
+    if (totalPrice > 150)
+    {
+      notify({ message:'Naliczono rabat w wysokości 20%!', position: 'top right', width: '450px' }, 'success', 2000);
+      return totalPrice * 0.2; 
+    }
+    else if (totalPrice > 90)
+    {
+      notify({ message: 'Naliczono rabat w wysokości 10%!', position: 'top right', width: '450px' }, 'success', 2000);  
+      return totalPrice * 0.1;
+    }
+    else
+    {
+        return 0;
+    }
   }
 }

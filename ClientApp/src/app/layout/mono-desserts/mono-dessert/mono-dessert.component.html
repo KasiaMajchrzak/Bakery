@@ -1,4 +1,4 @@
-<div class="cake-card container-fluid row">
+<div id="toast" class="cake-card container-fluid row">
     <div class="card-body">
       <div class="card-title">
         <h5>Stwórz Mono-deser!</h5>
@@ -16,9 +16,8 @@
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
             <mat-form-field class="ml-4" appearance="legacy" style="width: 250px;">
-              <mat-label>Ile kg?</mat-label>
+              <mat-label>Ile sztuk?</mat-label>
               <input matInput type="number" min="1" placeholder="2.5" [(ngModel)]="order.servings" (ngModelChange)="calculateTotalPrice()" required>
-              <mat-hint>Zaleca się 1kg tortu na 10 osób. Tort o wadze 2-2,5 kg ma średnicę 18cm.</mat-hint>
             </mat-form-field>
           </div>
           </div>
@@ -275,11 +274,16 @@
                     </div>
                     <mat-divider></mat-divider>
                     <div class="container-fluid row col-12 d-flex justify-content-between mt-3">
-                      <h6>Ilość kilogramów: {{ order.servings }}</h6>
-                      <h6>Cena bazowa: {{ baseProduct.price }} zł/kg</h6>
-                    </div>
-                    <div class="container-fluid row col-12 d-flex justify-content-between">
-                      <h6>Cena końcowa: {{ order.totalPrice }} zł/kg</h6>
+                      <div class="container-fluid row col-6 d-flex justify-content-start">
+                        <h6>Ilość sztuk: {{ order.servings }}</h6>
+                        <h6>Cena bazowa: {{ baseProduct.price }} zł/szt</h6>
+                        <h6>Cena końcowa (za kilogram): {{ totalPrice }} zł/szt</h6>
+                      </div>   
+                      <div class="container-fluid row col-6 d-flex justify-content-end">
+                        <h6>Cena końcowa (ogółem): {{ order.totalPrice }} zł</h6>
+                        <h6>Rabat: {{ order.discount | number:'1.2-2' }} zł</h6>
+                        <h6>Cena po rabacie: {{ order.totalPrice - order.discount }} zł</h6>
+                      </div>   
                     </div>
                   </div>
                   <div class="col-10 d-flex justify-content-center">

@@ -19,13 +19,11 @@ import { BirthdayCakeComponent } from './layout/birthday-cakes/birthday-cake/bir
 import { MonoDessertsComponent } from './layout/mono-desserts/mono-desserts.component';
 import { MonoDessertComponent } from './layout/mono-desserts/mono-dessert/mono-dessert.component';
 import { CommonModule } from '@angular/common';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
-import { Message } from 'primeng//api';
-import { MessageService } from 'primeng/api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DxAccordionModule } from 'devextreme-angular/ui/accordion';
 import { DxTemplateModule } from 'devextreme-angular/core';
+import { ButtonModule } from 'primeng/button';
+import notify from "devextreme/ui/notify";
 
 const routes: Routes = [
   { path : '', component: HomeComponent},
@@ -70,16 +68,15 @@ const routes: Routes = [
     MatListModule,
     PanelMenuModule,
     MatProgressSpinnerModule,
-    MessageModule, 
-    MessagesModule,
     NgbModule,
     MatExpansionModule,
     MatDatepickerModule,
     MatNativeDateModule,
     DxAccordionModule,
-    DxTemplateModule
+    DxTemplateModule,
+    ButtonModule
   ],
-  providers: [Connection, DatabaseService, MessageService],
+  providers: [Connection, DatabaseService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

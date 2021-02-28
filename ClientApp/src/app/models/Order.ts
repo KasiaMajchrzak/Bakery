@@ -20,4 +20,5 @@ export class Order {
   ordersAdditionals?: OrdersAdditionals[] = [];
   ordersDecorations?: OrdersDecorations[] = [];
   templateName?: string;
+  discount: number;
 }

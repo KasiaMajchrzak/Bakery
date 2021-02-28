@@ -1,5 +1,4 @@
-<p-messages></p-messages>
-<div class="cake-card container-fluid row">
+<div id="toast" class="cake-card container-fluid row">
   <div class="card-body">
     <div class="card-title">
       <h5>Stwórz Tort!</h5>
@@ -276,11 +275,16 @@
                 </div>
                 <mat-divider></mat-divider>
                 <div class="container-fluid row col-12 d-flex justify-content-between mt-3">
-                  <h6>Ilość kilogramów: {{ order.servings }}</h6>
-                  <h6>Cena bazowa: {{ baseProduct.price }} zł/kg</h6>
-                </div>
-                <div class="container-fluid row col-12 d-flex justify-content-between">
-                  <h6>Cena końcowa: {{ order.totalPrice }} zł/kg</h6>
+                  <div class="container-fluid row col-6 d-flex justify-content-start">
+                    <h6>Ilość kilogramów: {{ order.servings }}</h6>
+                    <h6>Cena bazowa: {{ baseProduct.price }} zł/kg</h6>
+                    <h6>Cena końcowa (za kilogram): {{ totalPrice }} zł/kg</h6>
+                  </div>   
+                  <div class="container-fluid row col-6 d-flex justify-content-end">
+                    <h6>Cena końcowa (ogółem): {{ order.totalPrice }} zł</h6>
+                    <h6>Rabat: {{ order.discount | number:'1.2-2' }} zł</h6>
+                    <h6>Cena po rabacie: {{ order.totalPrice - order.discount }} zł</h6>
+                  </div>   
                 </div>
               </div>
               <div class="col-10 d-flex justify-content-center">

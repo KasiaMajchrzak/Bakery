@@ -20,6 +20,7 @@ namespace Bakery.Models
         public DateTime CompletionDate { get; set; }
         public bool IsTemplate { get; set; }
         public string TemplateName { get; set; }
+        public decimal Discount { get; set; }
         [ForeignKey("BaseProduct_Id")]
         public virtual BaseProduct BaseProduct { get; set; }
         [ForeignKey("Cream_Id")]
@@ -32,5 +33,6 @@ namespace Bakery.Models
         public List<OrdersDecorations> OrdersDecorations { get; set; }
         [NotMapped]
         public string OrderedOnString { get; set; }
+        
     }
 }

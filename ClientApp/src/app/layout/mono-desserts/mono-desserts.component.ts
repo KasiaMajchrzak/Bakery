@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { MessageService } from "primeng/api";
 import { BaseProduct } from "src/app/models/BaseProduct";
 import { Order } from "src/app/models/Order";
 import { DatabaseService } from "src/app/services/database.service";
@@ -17,8 +16,7 @@ export class MonoDessertsComponent implements OnInit {
 
     constructor(
       private router: Router,
-      private service: DatabaseService,
-      private messageService: MessageService
+      private service: DatabaseService
     ) {}
 
     ngOnInit(){
@@ -36,7 +34,6 @@ export class MonoDessertsComponent implements OnInit {
     getTemplates(baseProductId: number){
       this.service.SetRoute(`order/getordertemplates?baseProductId=${baseProductId}`);
       this.service.GetObjList<any>().subscribe(data => {
-        console.log('this.templates', data);
         this.templates = data;
       })
     }

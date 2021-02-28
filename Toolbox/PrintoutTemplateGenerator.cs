@@ -45,6 +45,9 @@ namespace Bakery.Toolbox
                         additionalPrice += decoration.Decoration.Price;
                     }
                 }
+                
+                var priceAfterDiscount = order.TotalPrice - order.Discount;
+
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine(@"
                     <!DOCTYPE html>
@@ -152,18 +155,32 @@ namespace Bakery.Toolbox
 
                 stringBuilder.AppendFormat(@"
                                 <div class='container-fluid row col-10 d-flex justify-content-between bg-light text-dark mt-3'>
-                                    <h5>Cena bazowa: {0} zł/kg</h5>
-                                    <h5>Dopłata: {1} zł/kg</h5>
-                                  </div>
-                                  <div class='container-fluid row col-10 d-flex justify-content-between bg-light text-dark'>
-                                    <h5>Ilość kilogramów: {2}</h5>
-                                    <h5>Cena końcowa: {3} zł/kg</h5>
+                                   <div class='container-fluid row col-5 d-flex justify-content-start bg-light text-dark mt-3'>
+                                      <h5>Cena bazowa: {0} zł/kg</h5>
+                                    </div>
+                                    <div class='container-fluid row col-5 d-flex justify-content-end bg-light text-dark mt-3'>
+                                        <h5>Cena końcowa: {1} zł</h5>
+                                    </div>
+                                    <div class='container-fluid row col-5 d-flex justify-content-start bg-light text-dark mt-3'>
+                                      <h5>Dopłata: {2} zł/kg</h5>
+                                    </div>
+                                    <div class='container-fluid row col-5 d-flex justify-content-end bg-light text-dark mt-3'>
+                                        <h5>Rabat: {3}</h5>
+                                    </div>
+                                    <div class='container-fluid row col-5 d-flex justify-content-start bg-light text-dark mt-3'>
+                                      <h5>Ilość kilogramów: {4}</h5>
+                                    </div>
+                                    <div class='container-fluid row col-5 d-flex justify-content-end bg-light text-dark mt-3'>
+                                      <h5>Cena po rabacie: {5} zł</h5>
+                                    </div>
                                   </div>
                                 </div>
                                </body>
-                             </html>", order.BaseProduct.Price.ToString("0.##"), additionalPrice.ToString("0.##"), order.Servings, order.TotalPrice.ToString("0.##"));
+                             </html>", order.BaseProduct.Price.ToString("0.##"), order.TotalPrice.ToString("0.##"), additionalPrice.ToString("0.##"), 
+                             order.Discount.ToString("0.##"), order.Servings, priceAfterDiscount.ToString("0.##"));
 
-                return stringBuilder.ToString();
+                var result = stringBuilder.ToString();
+                return result;
             }
             catch(Exception ex)
             {

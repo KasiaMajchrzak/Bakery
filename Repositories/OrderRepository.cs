@@ -86,19 +86,8 @@ namespace Bakery.Repositories
                 {
                     var ordersAdditionals = order.OrdersAdditionals;
                     var ordersDecorations = order.OrdersDecorations;
-
-                    order.TotalPrice = order.Cake.Price + order.Cream.Price;
-                    if (ordersAdditionals.Count > 0)                
-                        foreach (var orderAdditional in ordersAdditionals)
-                        {
-                            order.TotalPrice += (orderAdditional.Additional.Price * orderAdditional.Quantity);
-                        }
-                    if (ordersDecorations.Count > 0)
-                        foreach (var orderDecorations in ordersDecorations)
-                        {
-                            order.TotalPrice += (orderDecorations.Decoration.Price * orderDecorations.Quantity);
-                        }
-                    order.TotalPrice = order.TotalPrice * order.Servings;
+                 
+                    order.Discount = CalculateDiscount(order);
                     order.BaseProduct = null;
                     order.Cake = null;
                     order.Cream = null;
@@ -172,6 +161,22 @@ namespace Bakery.Repositories
                     return new byte[] { };
                 }
             }   
+        }
+
+        public decimal CalculateDiscount(Order order) 
+        {
+            if ((order.BaseProduct.Name == "Tort" && order.TotalPrice > 380) || (order.BaseProduct.Name == "Mono-deser" && order.TotalPrice > 150))
+            {
+                return decimal.Multiply(order.TotalPrice, (decimal)0.2); 
+            }
+            else if ((order.BaseProduct.Name == "Tort" && order.TotalPrice > 300) || (order.BaseProduct.Name == "Mono-deser" && order.TotalPrice > 90))
+            {
+                return decimal.Multiply(order.TotalPrice, (decimal)0.1);
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }
