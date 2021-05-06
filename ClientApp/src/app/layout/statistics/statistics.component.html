@@ -1,0 +1,128 @@
+<div id="toast" class="cake-card container-fluid">
+    <div class="card-body">
+        <div class="card-title">
+            <p style="font-size: 26px; font-weight: 400; width: fit-content;">Statystyki</p>
+        </div>
+        <div class="col-12">
+            <div class="container-fluid row d-flex justify-content-center col-12">
+                <dx-tab-panel #statisticsTabs>
+                    <dxi-item title="Najpopularniejsze" style="height: 100%;">
+                        <div class="container-fluid col-12 d-flex justify-content-between mt-3">
+                            <div class="col-3">
+                                <mat-form-field appearance="legacy">
+                                    <mat-label>Wybierz element</mat-label>
+                                    <mat-select [(ngModel)]="selectedType" name="food" (ngModelChange)="changeChartType()">
+                                      <mat-option *ngFor="let item of chartType" [value]="item.value">
+                                        {{item.name}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="container-fluid col-12 d-flex justify-content-center">
+                            <dx-pie-chart
+                                id="pieChart"
+                                type="doughnut"
+                                title="Rozkład sprzedaży: {{ selectedElement }}"
+                                palette="Soft Pastel"
+                                [dataSource]="sale"
+                                (onPointClick)="click($event)">
+                                <dxi-series
+                                    argumentField="objectName"
+                                    valueField="numberOfOrders">
+                                    <dxo-label
+                                        [visible]="true">
+                                        <dxo-connector [visible]="true"></dxo-connector>
+                                    </dxo-label>
+                                </dxi-series>
+                                <dxo-legend
+                                    [margin]="0"
+                                    horizontalAlignment="right"
+                                    verticalAlignment="top"></dxo-legend>
+                                <dxo-tooltip
+                                    [enabled]="true"
+                                    [customizeTooltip]="customizeTooltip">
+                                </dxo-tooltip>
+                            </dx-pie-chart>
+                        </div>
+                    </dxi-item>
+                    <dxi-item title="Zamawiane razem" [disabled]="!selectedStatistic.object">
+                        <div class="row d-flex justify-content-center mt-3">
+                            <p style="font-size: 26px; font-weight: 300; width: fit-content;">{{ selectedStatistic.objectName }}</p>
+                        </div>
+                        <div class="container-fluid col-12 d-flex justify-content-between align-items-center" style="height: 500px;">
+                            <div class="col-4 d-flex justify-content-center" *ngIf="selectedStatistic.object && !selectedStatistic.object.cake_Id">
+                                <dx-chart
+                                    id="cakeChart"
+                                    [dataSource]="selectedStatistic.orderedTogetherCakes">
+                                    <dxi-series
+                                        argumentField="objectName"
+                                        valueField="numberOfOrders"
+                                        name="Ciasta"
+                                        type="bar"
+                                        color="#f0c96e">
+                                    </dxi-series>
+                                    <dxo-tooltip
+                                        [enabled]="true"
+                                        [customizeTooltip]="customizeTooltipChart">
+                                    </dxo-tooltip>
+                                </dx-chart>
+                            </div>
+                            <div class="col-4 d-flex justify-content-center" *ngIf="selectedStatistic.object && !selectedStatistic.object.cream_Id">
+                                <dx-chart
+                                    id="creamChart"
+                                    [dataSource]="selectedStatistic.orderedTogetherCreams">
+                                    <dxi-series
+                                        argumentField="objectName"
+                                        valueField="numberOfOrders"
+                                        name="Kremy"
+                                        type="bar"
+                                        color="#ea8aed">
+                                    </dxi-series>
+                                    <dxo-tooltip
+                                        [enabled]="true"
+                                        [customizeTooltip]="customizeTooltipChart">
+                                    </dxo-tooltip>
+                                </dx-chart>
+                            </div>
+                            <div class="col-4 d-flex justify-content-center" *ngIf="selectedStatistic.object && !selectedStatistic.object.additional_Id">
+                                <dx-chart
+                                    id="additionalChart"
+                                    [dataSource]="selectedStatistic.orderedTogetherAdditionals">
+                                    <dxi-series
+                                        argumentField="objectName"
+                                        valueField="numberOfOrders"
+                                        name="Dodatki"
+                                        type="bar"
+                                        color="#a560eb">
+                                    </dxi-series>
+                                    <dxo-tooltip
+                                        [enabled]="true"
+                                        [customizeTooltip]="customizeTooltipChart">
+                                    </dxo-tooltip>
+                                </dx-chart>
+                            </div>
+                            <div class="col-4 d-flex justify-content-center" *ngIf="selectedStatistic.object && !selectedStatistic.object.decoration_Id">
+                                <dx-chart
+                                    id="decorationChart"
+                                    [dataSource]="selectedStatistic.orderedTogetherDecorations">
+                                    <dxi-series
+                                        argumentField="objectName"
+                                        valueField="numberOfOrders"
+                                        name="Dekoracje"
+                                        type="bar"
+                                        color="#5baae3">
+                                    </dxi-series>
+                                    <dxo-tooltip
+                                        [enabled]="true"
+                                        [customizeTooltip]="customizeTooltipChart">
+                                    </dxo-tooltip>
+                                </dx-chart>
+                            </div>
+                        </div>
+                    </dxi-item>
+                </dx-tab-panel>
+            </div>
+        </div>
+    </div>
+</div>

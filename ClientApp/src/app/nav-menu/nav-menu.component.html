@@ -1,4 +1,4 @@
-<mat-sidenav-container class="example-container">
+<!-- <mat-sidenav-container class="example-container">
   <mat-sidenav mode="side" opened class="sidenav" [fixedInViewport]="true" [fixedTopGap]="0" [fixedBottomGap]="0">
     <div class="d-flex flex-column justify-content-start" style="height: 100%; background: rgba(251, 225, 255, 0.534);">
       <ng-container *ngFor="let item of menuItems">
@@ -19,5 +19,20 @@
       </ng-container>
     </div>
   </mat-sidenav>
-</mat-sidenav-container>
+</mat-sidenav-container> -->
+<div class="nav-wrapper">
+  <div class="container-fluid d-flex justify-content-between" style="height: 100%;">
+    <div class="col-6 d-flex justify-content-start align-items-center" style="height: 100%;">
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon" (click)="navigate('#')">
+        <mat-icon>home</mat-icon>
+      </button>
+    </div>
+    <div class="col-6 d-flex justify-content-end align-items-center" style="height: 100%;">
+      <span>eTort</span>
+      <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+        <mat-icon>share</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
 

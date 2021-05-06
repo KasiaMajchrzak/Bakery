@@ -180,6 +180,11 @@ export class BirthdayCakeComponent implements OnInit {
   }
 
   addOrder(){
+    if (!this.order.completionDate || !this.order.servings || !this.order.cake_Id || !this.order.cream_Id) {
+      notify({ message: 'Wypełnij wszystkie obowiązkowe pola!', position: 'top right', width: '450px' }, 'error', 5000);
+      return;
+    }
+
     const a = document.createElement('a');
     this.service.SetRoute('order/addorder');
     this.service.AddObjPDF<any>(this.order).subscribe((data) => {
@@ -236,8 +241,8 @@ export class BirthdayCakeComponent implements OnInit {
   calculateDiscount(totalPrice: number): number {
     if (totalPrice > 380)
     {
-      notify({ message:'Naliczono rabat w wysokości 20%!', position: 'top right', width: '450px' }, 'success', 2000);
-      return totalPrice * 0.2; 
+      notify({ message:'Naliczono rabat w wysokości 15%!', position: 'top right', width: '450px' }, 'success', 2000);
+      return totalPrice * 0.15; 
     }
     else if (totalPrice > 300)
     {

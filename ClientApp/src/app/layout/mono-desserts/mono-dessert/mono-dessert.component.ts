@@ -191,6 +191,11 @@ export class MonoDessertComponent implements OnInit {
   }
 
   addOrder(){
+    if (!this.order.completionDate || !this.order.servings || !this.order.cake_Id || !this.order.cream_Id) {
+      notify({ message: 'Wypełnij wszystkie obowiązkowe pola!', position: 'top right', width: '450px' }, 'error', 5000);
+      return;
+    }
+    
     const a = document.createElement('a');
     this.service.SetRoute('order/addorder');
     this.service.AddObjPDF<any>(this.order).subscribe((data) => {

@@ -10,7 +10,7 @@ import { HomeComponent } from './home/home.component';
 import { Connection } from './models/Connection';
 import { DatabaseService } from './services/database.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatDividerModule, MatExpansionModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatNativeDateModule, MatPaginatorModule, MatSidenavModule, MatSortModule, MatStepperModule, MatTableModule, MatToolbarModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatDatepickerModule, MatDividerModule, MatExpansionModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatNativeDateModule, MatPaginatorIntl, MatPaginatorModule, MatSelectModule, MatSidenavModule, MatSortModule, MatStepperModule, MatTableModule, MatToolbarModule, MAT_DATE_LOCALE } from '@angular/material';
 import { DividerModule } from "primeng/divider";
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -24,6 +24,9 @@ import { DxAccordionModule } from 'devextreme-angular/ui/accordion';
 import { DxTemplateModule } from 'devextreme-angular/core';
 import { ButtonModule } from 'primeng/button';
 import notify from "devextreme/ui/notify";
+import { StatisticsComponent } from './layout/statistics/statistics.component';
+import { DxChartModule, DxPieChartModule, DxTabPanelModule } from 'devextreme-angular';
+import { MatPaginatorTranslateService } from './services/mat-paginator-translate.service';
 
 const routes: Routes = [
   { path : '', component: HomeComponent},
@@ -32,7 +35,8 @@ const routes: Routes = [
   { path : 'birthday-cakes/birthday-cake/:id', component: BirthdayCakeComponent },
   { path : 'mono-desserts/mono-desserts', component: MonoDessertsComponent },
   { path : 'mono-desserts/mono-dessert', component: MonoDessertComponent },
-  { path : 'mono-desserts/mono-dessert/:id', component: MonoDessertComponent }
+  { path : 'mono-desserts/mono-dessert/:id', component: MonoDessertComponent },
+  { path : 'statistics', component: StatisticsComponent }
 ];
 
 @NgModule({
@@ -43,7 +47,8 @@ const routes: Routes = [
     BirthdayCakeComponent,
     MonoDessertComponent,
     BirthdayCakesComponent,
-    MonoDessertsComponent
+    MonoDessertsComponent, 
+    StatisticsComponent
   ],
   imports: [
     CommonModule,
@@ -74,9 +79,13 @@ const routes: Routes = [
     MatNativeDateModule,
     DxAccordionModule,
     DxTemplateModule,
-    ButtonModule
+    ButtonModule,
+    DxTabPanelModule,
+    DxPieChartModule,
+    MatSelectModule,
+    DxChartModule
   ],
-  providers: [Connection, DatabaseService],
+  providers: [Connection, DatabaseService, { provide: MatPaginatorIntl, useClass: MatPaginatorTranslateService}, { provide: MAT_DATE_LOCALE, useValue: 'pl' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

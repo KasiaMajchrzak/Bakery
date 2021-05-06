@@ -1,0 +1,21 @@
+#statisticsTabs {
+    height: 90%;
+}
+
+::ng-deep #pieChart {
+    height: 500px;
+    width: 800px;
+}
+
+::ng-deep #cakeChart {
+    height: 450px;
+}
+::ng-deep #creamChart {
+    height: 450px;
+}
+::ng-deep #additionalChart {
+    height: 450px;
+}
+::ng-deep #decorationChart {
+    height: 450px;
+}

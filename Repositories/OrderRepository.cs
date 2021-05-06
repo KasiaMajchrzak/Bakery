@@ -167,7 +167,7 @@ namespace Bakery.Repositories
         {
             if ((order.BaseProduct.Name == "Tort" && order.TotalPrice > 380) || (order.BaseProduct.Name == "Mono-deser" && order.TotalPrice > 150))
             {
-                return decimal.Multiply(order.TotalPrice, (decimal)0.2); 
+                return decimal.Multiply(order.TotalPrice, (decimal)0.15); 
             }
             else if ((order.BaseProduct.Name == "Tort" && order.TotalPrice > 300) || (order.BaseProduct.Name == "Mono-deser" && order.TotalPrice > 90))
             {

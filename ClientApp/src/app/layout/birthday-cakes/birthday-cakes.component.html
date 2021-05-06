@@ -1,15 +1,10 @@
-<div id="toast" class="cake-card container-fluid row">
+<div id="toast" class="cake-card container-fluid">
     <div class="card-body">
         <div class="card-title">
-            <h5>Gotowe propozycje</h5>
+            <p style="font-size: 26px; font-weight: 400; width: fit-content;">Gotowe propozycje</p>
         </div>
         <div class="col-12">
-            <div class="container-fluid row d-flex justify-content-center col-12">
-                <div class="d-flex justify-content-start mt-2" style="width: 90%;">
-                    
-                </div>
-            </div>
-            <div class="container-fluid row d-flex justify-content-center col-12" style="max-height: 600px; overflow: auto;">
+            <div class="container-fluid row d-flex justify-content-center col-12 mt-3" style="max-height: 600px; overflow: auto;">
                 <ng-container *ngFor="let template of templates">
                     <mat-expansion-panel class="mb-1 mt-1" style="box-shadow: none;">
                         <mat-expansion-panel-header class="col-12 d-flex justify-content-between">
@@ -20,7 +15,7 @@
                                 {{ template.totalPrice }} zł/kg
                             </mat-panel-description>
                         </mat-expansion-panel-header>
-                        <div class="d-flex col-10 justify-content-between">
+                        <div class="d-flex col-12 justify-content-between">
                             <ul style="list-style: none;">
                                 <li *ngFor="let additional of template.ordersAdditionals">
                                     <strong>{{ additional.additional.name }}</strong> {{ additional.details ? ': ' : ''}} {{ additional.details }}
@@ -29,7 +24,7 @@
                                     <strong>{{ decoration.decoration.name }}</strong> {{ decoration.details ? ': ' : ''}} {{ decoration.details }}
                                  </li>
                             </ul>
-                            <button mat-button (click)="personalize(template.order_Id)">
+                            <button mat-stroked-button (click)="personalize(template.order_Id)" style="max-height: 40px;">
                                 Personalizuj
                             </button>
                         </div>

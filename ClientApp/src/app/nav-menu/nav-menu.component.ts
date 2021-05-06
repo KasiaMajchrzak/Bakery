@@ -40,14 +40,18 @@ export class NavMenuComponent implements OnInit {
     }
   }
 
-  navigate(item: any) {
-    console.log('navigate', item);
-    if(item.children && item.children.length > 0) {
-      item.expanded = !item.expanded;
-    } else {
-      this.router.navigate([item.path]);
-    }
+  navigate(path: string) {
+    this.router.navigateByUrl(path);
   }
+
+  // navigate(item: any) {
+  //   console.log('navigate', item);
+  //   if(item.children && item.children.length > 0) {
+  //     item.expanded = !item.expanded;
+  //   } else {
+  //     this.router.navigate([item.path]);
+  //   }
+  // }
 
   async collapse() {
     this.expanded = !this.expanded;

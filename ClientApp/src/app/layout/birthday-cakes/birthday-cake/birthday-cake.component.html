@@ -1,9 +1,9 @@
-<div id="toast" class="cake-card container-fluid row">
+<div id="toast" class="cake-card container-fluid">
   <div class="card-body">
     <div class="card-title">
-      <h5>Stwórz Tort!</h5>
+      <p style="font-size: 26px; font-weight: 400; width: fit-content;">Stwórz Tort!</p>
     </div>
-    <div class="col-12">
+    <div class="col-12 mt-3">
       <div class="container-fluid row d-flex justify-content-between col-12">
         <div class="col-6 d-flex justify-content-start">
           <h5>Cena: {{ totalPrice }} zł/kg</h5>    
@@ -66,10 +66,8 @@
                   <tr mat-row *matRowDef="let row; columns: displayedColumnsCakes;"></tr>
                 </table>
               </div>
-              <mat-paginator #paginatorCakes [pageSizeOptions]="[5, 10, 25, 50]"></mat-paginator>
-            </div>
-            <div style="bottom: 150px; position:fixed">
-              <button mat-button matStepperNext><span class="material-icons">keyboard_arrow_right</span></button>
+              <mat-paginator #paginatorCakes [pageSizeOptions]="[5, 10, 25, 50]">
+              </mat-paginator>
             </div>
           </mat-step>
           <mat-step>
@@ -116,10 +114,6 @@
               </div>
               <mat-paginator #paginatorCreams [pageSizeOptions]="[5, 10, 25, 50]"></mat-paginator>
             </div>
-            <div style="bottom: 150px; position:fixed">
-              <button mat-button matStepperPrevious><span class="material-icons">keyboard_arrow_left</span></button>
-              <button mat-button matStepperNext><span class="material-icons">keyboard_arrow_right</span></button>
-            </div>
           </mat-step>
           <mat-step>
             <ng-template matStepLabel>{{ selectionAdditionals.selected[0] ? selectionAdditionals.selected[0].additional.name+'...' : 'Dodatki' }}</ng-template>
@@ -165,10 +159,6 @@
               </div>
               <mat-paginator #paginatorAdditionals [pageSizeOptions]="[5, 10, 25, 50]"></mat-paginator>
             </div>
-            <div style="bottom: 150px; position:fixed">
-              <button mat-button matStepperPrevious><span class="material-icons">keyboard_arrow_left</span></button>
-              <button mat-button matStepperNext><span class="material-icons">keyboard_arrow_right</span></button>
-            </div>
           </mat-step>
           <mat-step>
             <ng-template matStepLabel>{{ selectionDecorations.selected[0] ? selectionDecorations.selected[0].decoration.name+'...' : 'Dekoracje' }}</ng-template>
@@ -213,10 +203,6 @@
                 </table>
               </div>
               <mat-paginator #paginatorDecorations [pageSizeOptions]="[5, 10, 25, 50]"></mat-paginator>
-            </div>
-            <div style="bottom: 150px; position:fixed">
-              <button mat-button matStepperPrevious><span class="material-icons">keyboard_arrow_left</span></button>
-              <button mat-button matStepperNext (click)="generateOrder()"><span class="material-icons">keyboard_arrow_right</span></button>
             </div>
           </mat-step>
           <mat-step label="Wygeneruj zamówienie!">
@@ -287,19 +273,15 @@
                   </div>   
                 </div>
               </div>
-              <div class="col-10 d-flex justify-content-center">
+              <div class="col-10 d-flex justify-content-center mt-4">
                 <div>               
-                  <button mat-button class="btn" (click)="addOrder()" [disabled]="invalidForm">
+                  <button mat-stroked-button class="btn" (click)="addOrder()" [disabled]="invalidForm || !order.completionDate">
                     <span>
-                      <mat-icon aria-hidden="false">file_download</mat-icon>
                       Wygeneruj i pobierz zamówienie
                     </span>
                   </button>
                 </div>
               </div>
-            </div>
-            <div style="bottom: 150px; position:fixed">
-              <button mat-button matStepperPrevious><span class="material-icons">keyboard_arrow_left</span></button>
             </div>
           </mat-step>
         </mat-horizontal-stepper> 

@@ -68,7 +68,7 @@ namespace Bakery.Migrations
             Execute.Sql(@"Insert into [dbo].[Order] (BaseProduct_Id, Cake_Id, Cream_Id, Servings, TotalPrice, IsTemplate, TemplateName) Values
                 ((Select BaseProduct_Id From [dbo].[BaseProduct] Where [Name] = 'Mono-deser'), 
                  (Select Cake_Id From [dbo].[Cake] Where [Name] = 'Ciemny Biszkopt'), 
-                 (Select Cream_Id From [dbo].[Cream] Where [Name] = 'Mus Waniliowy'), 1, 11,50, 1, 'Wanilia/Jagoda');
+                 (Select Cream_Id From [dbo].[Cream] Where [Name] = 'Mus Waniliowy'), 1, 11.50, 1, 'Wanilia/Jagoda');
                 Insert into [dbo].[OrdersAdditionals] (Order_Id, Additional_Id, Quantity, Details) Values
                 ((Select Order_Id From [dbo].[Order] Where [TemplateName] like 'Wanilia/Jagoda'), 
                  (Select Additional_Id From [dbo].[Additional] Where [Name] like 'Sos Owocowy'), 1, 'Sos z jagód'),
@@ -100,7 +100,7 @@ namespace Bakery.Migrations
             Execute.Sql(@"Insert into [dbo].[Order] (BaseProduct_Id, Cake_Id, Cream_Id, Servings, TotalPrice, IsTemplate, TemplateName) Values
                 ((Select BaseProduct_Id From [dbo].[BaseProduct] Where [Name] = 'Mono-deser'), 
                  (Select Cake_Id From [dbo].[Cake] Where [Name] = 'Ciasto Czekoladowe'), 
-                 (Select Cream_Id From [dbo].[Cream] Where [Name] = 'Mus Palona Biała Czekolada'), 1, 11,50, 1, 'Mango/Marakuja/Palona Czekolada');
+                 (Select Cream_Id From [dbo].[Cream] Where [Name] = 'Mus Palona Biała Czekolada'), 1, 11.50, 1, 'Mango/Marakuja/Palona Czekolada');
                 Insert into [dbo].[OrdersAdditionals] (Order_Id, Additional_Id, Quantity, Details) Values
                 ((Select Order_Id From [dbo].[Order] Where [TemplateName] like 'Mango/Marakuja/Palona Czekolada'), 
                  (Select Additional_Id From [dbo].[Additional] Where [Name] like 'Żelka Mango-Marakuja'), 1, ''),
@@ -196,7 +196,7 @@ namespace Bakery.Migrations
             Execute.Sql(@"Insert into [dbo].[Order] (BaseProduct_Id, Cake_Id, Cream_Id, Servings, TotalPrice, IsTemplate, TemplateName) Values
                 ((Select BaseProduct_Id From [dbo].[BaseProduct] Where [Name] = 'Mono-deser'), 
                  (Select Cake_Id From [dbo].[Cake] Where [Name] = 'Jasny Biszkopt'), 
-                 (Select Cream_Id From [dbo].[Cream] Where [Name] = 'Mus Sernik'), 1, 11,50, 1, 'Serniczek/Malina');
+                 (Select Cream_Id From [dbo].[Cream] Where [Name] = 'Mus Sernik'), 1, 11.50, 1, 'Serniczek/Malina');
                 Insert into [dbo].[OrdersAdditionals] (Order_Id, Additional_Id, Quantity, Details) Values
                 ((Select Order_Id From [dbo].[Order] Where [TemplateName] like 'Serniczek/Malina'), 
                  (Select Additional_Id From [dbo].[Additional] Where [Name] like 'Konfitura Malinowa'), 1, ''),
